@@ -80,11 +80,25 @@ void ofApp::draw(){
     }
         
     
+   // ofSetColor(backgroundcolor);
+   // ofDrawRectangle(0,0,ofGetWidth(),ofGetHeight());
+    
+    
+    
 
+
+
+    
+    
+    ofSetColor(255);
+    
     fbo.begin();
     ofEnableAlphaBlending();
     ofEnableBlendMode(OF_BLENDMODE_ADD);
     ofClear(0,0);
+    
+    
+    
    // glEnable(GL_BLEND);
    // glBlendFunc(GL_SRC_ALPHA, GL_DST_ALPHA);
    // glBlendEquation(GL_FUNC_ADD);
@@ -200,10 +214,7 @@ void ofApp::draw(){
    // fboBlurTwoPass.draw(0, 0);
  
     
-    ofSetColor(backgroundcolor);
-    ofDrawRectangle(0,0,ofGetWidth(),ofGetHeight());
-    ofSetColor(255);
-   // ofEnableBlendMode(OF_BLENDMODE_ADD);
+  
 
     fboBlurTwoPass.draw(0,0);
     //blur.draw();

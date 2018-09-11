@@ -152,7 +152,7 @@ void Wave::setup(int _angle,ofColor color){
     
     actualPeriod=period;
     periodStart=period;
-    periodTarget=500;
+    periodTarget=200;
     periodInitTime=ofGetElapsedTimef();
     periodDuration=t;
     
