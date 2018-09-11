@@ -99,7 +99,9 @@ void Wave::setup(int _angle,ofColor color){
     
     angle=_angle;
     
-    speed=ofRandom(-0.005,-0.01);
+   // speed=ofRandom(-0.005,-0.01);
+    speed=ofRandom(-0.01,-0.05);
+
     colorangle=(color.getHueAngle()+180);
     colorangle=colorangle%255;
    // myColor=ofColor( ofColor::fromHsb(ofRandom(150,220),ofRandom(200,255),ofRandom(150,255),150));
@@ -139,20 +141,20 @@ void Wave::setup(int _angle,ofColor color){
     
     startAlpha=255;
     actualAlpha=255;
-    alphaTarget=0;
+    alphaTarget=255;
     fadeInitTime=ofGetElapsedTimef();
     fadeDuration=t;
     
     startAmplitude=0;
     actualAmplitude=0;
-    amplitudeTarget=amplitude*10;
+    amplitudeTarget=100;//amplitude*10;
     amplitudeInitTime=ofGetElapsedTimef();
     amplitudeDuration=t;
     
     
     actualPeriod=period;
     periodStart=period;
-    periodTarget=500;
+    periodTarget=period;//500;
     periodInitTime=ofGetElapsedTimef();
     periodDuration=t;
     
@@ -212,22 +214,19 @@ void Wave::update(){
     actualLerp = ofxeasing::map_clamp(now, lerpInitTime, lerpEndTime, startLerp, lerpTarget, &ofxeasing::linear::easeOut);
 
     auto amplitudeEndTime = amplitudeInitTime + amplitudeDuration;
-    actualAmplitude = ofxeasing::map_clamp(now, amplitudeInitTime, amplitudeEndTime, startAmplitude, amplitudeTarget, &ofxeasing::linear::easeIn);
+    actualAmplitude = ofxeasing::map_clamp(now, amplitudeInitTime, amplitudeEndTime, startAmplitude, amplitudeTarget, &ofxeasing::linear::easeInOut);
     
     auto periodEndTime = periodInitTime + periodDuration;
     
-    actualPeriod = int(ofxeasing::map_clamp(now, periodInitTime, periodEndTime, periodStart, periodTarget, &ofxeasing::quad::easeIn));
+    actualPeriod = int(ofxeasing::map_clamp(now, periodInitTime, periodEndTime, periodStart, periodTarget, &ofxeasing::linear::easeInOut));
+   
     setPeriod(actualPeriod);
     
-    
-    // Increment theta (try different values for
-    // 'angular velocity' here)
+   
     theta -= speed;
     
     // For every x value, calculate a y value with sine function
     float x = -250+theta;
-    //for (int i = 0; i < yvalues.size(); i++) {
-   
     for (int i = 0; i < numActors; i++) {
         yvalues[i] = sin(x)*actualAmplitude;
         x+=dx;
@@ -479,6 +478,7 @@ int Wave::getState(){
 void Wave::setPeriodTarget(int t){
     periodTarget=t;
     periodStart=actualPeriod;
+    cout<<"target "<<periodTarget<<" start "<<periodStart<<endl;
 }
 
 void Wave::setPeriodDuration(float t){
@@ -487,6 +487,23 @@ void Wave::setPeriodDuration(float t){
 void Wave::setInitTime(){
     periodInitTime=ofGetElapsedTimef();
 }
+
+
+
+
+void Wave::setAmplitudeTarget(int t){
+    amplitudeTarget=t;
+    startAmplitude=actualAmplitude;
+    cout<<"amp "<<amplitudeTarget<<" start "<<startAmplitude<<endl;
+}
+
+void Wave::setAmplitudeDuration(float t){
+    amplitudeDuration=t;
+    amplitudeInitTime=ofGetElapsedTimef();
+
+}
+
+
 
 float Wave::map(float in, float inMin, float inMax, float outMin, float outMax, float shaper){
         // (1) convert to pct (0-1)

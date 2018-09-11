@@ -37,6 +37,21 @@ void ofApp::setup(){
 
     
    // ofBackground(255);
+    
+    
+    
+    backgroundcolor.setHueAngle(hueAngle%360);
+    waves.push_back(shared_ptr<Wave>(new Wave));
+    waves.back().get()->setup(angle,backgroundcolor);
+    
+    
+    angle=(angle+90)%360;
+    hueAngle+=10;
+    backgroundcolor.setHueAngle(hueAngle%360);
+    waves.push_back(shared_ptr<Wave>(new Wave));
+    waves.back().get()->setup(angle,backgroundcolor);
+    
+    
 }
 
 //--------------------------------------------------------------
@@ -49,9 +64,14 @@ void ofApp::update(){
     for(int i=0;i<waves.size();i++){
         waves[i]->setBackgroundcolor(backgroundcolor);
         if(numPlayer!=numPlayerBefore){
-            waves[i]->setPeriodTarget(ofMap(numPlayer, 0, 10, 800, 50));
+            waves[i]->setPeriodTarget(ofMap(numPlayer, 0, 10, 800, 100));
             waves[i]->setPeriodDuration(5);
             waves[i]->setInitTime();
+            
+            waves[i]->setAmplitudeTarget(ofMap(numPlayer, 0, 10, 100, ofGetHeight()*3));
+            waves[i]->setAmplitudeDuration(5);
+            
+            cout<<ofMap(numPlayer, 0, 10, 800, 50)<<endl;
         }
         waves[i]->update();
     }
@@ -220,6 +240,15 @@ void ofApp::draw(){
 
 //    blur.draw();
     ofPopMatrix();
+    
+    
+    string info = "";
+    info += "FPS: "+ofToString(ofGetFrameRate())+"\n";
+    info += "num Player: "+ofToString(numPlayer)+"\n";
+
+    
+    ofSetColor(0);
+    ofDrawBitmapString(info, 10, 10);
    
 }
 
@@ -321,6 +350,8 @@ void ofApp::keyPressed(int key){
     if (key == OF_KEY_UP)
     {
         numPlayer++;
+        if(numPlayer>10)numPlayer=10;
+
     }
     if (key == OF_KEY_DOWN)
     {
