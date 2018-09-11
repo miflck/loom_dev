@@ -73,24 +73,51 @@ void ofApp::draw(){
 
         ofSetColor(255);
    
-        
-    //    vector <ofFbo> fbos;
-        
-      /*  for(int i=0;i<waves.size();i++){
-            //ofFbo f=waves[i]->getFbo();
-            fbos.push_back(waves[i]->getFbo());
-        }*/
+    vector <ofFbo> fbos;
+    
+    for(int i=0;i<waves.size();i++){
+        fbos.push_back(waves[i]->getFbo());
+    }
         
     
-        ofEnableAlphaBlending();
-    ofEnableBlendMode(OF_BLENDMODE_ADD);
+
     fbo.begin();
+    ofEnableAlphaBlending();
+    ofEnableBlendMode(OF_BLENDMODE_ADD);
     ofClear(0,0);
+   // glEnable(GL_BLEND);
+   // glBlendFunc(GL_SRC_ALPHA, GL_DST_ALPHA);
+   // glBlendEquation(GL_FUNC_ADD);
     for(int i=0;i<waves.size();i++){
         waves[i]->draw();
     }
-      fbo.end();
-   // ofEnableBlendMode(OF_BLENDMODE_ADD);
+    fbo.end();
+   
+    
+    
+   /* fbo.begin();
+    ofClear(0,0,0,0);
+    ofSetColor(255);
+    glEnable(GL_BLEND);
+    if(bUseBlending){
+       // glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_COLOR);
+       // glBlendEquation(GL_FUNC_ADD);
+        
+        glBlendFunc(GL_SRC_ALPHA, GL_DST_ALPHA);
+        glBlendEquation(GL_FUNC_ADD);
+    }
+   
+    for(int i=0;i<fbos.size();i++){
+        if(bUseAlpha)ofSetColor(255,waves[i]->getAlpha());
+        fbos[i].draw(0,0);
+    }
+    //  }
+    glDisable(GL_BLEND);
+    fbo.end();
+    
+    */
+    
+    
     ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 
    /* fbo.draw(0,0);

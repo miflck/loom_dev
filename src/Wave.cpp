@@ -287,10 +287,10 @@ void Wave::draw(){
     }
 
     
-    int anz=10;
+    int anz=13;
     
-    int minWidth=1;
-    int maxWidth=25;
+    int minWidth=5;
+    int maxWidth=45;
     for(int i=anz-1;i>=0;i--){
         
       /*  s=ofMap(i,0,anz-1,0,255);
@@ -300,14 +300,14 @@ void Wave::draw(){
         ofColor inBetween = c2.lerp(c3,ratio) ;
         
         */
-        float alpha=ofMap(i,0,anz-1,255,100);
+        float alpha=ofMap(i,0,anz-1,255,60);
       //  ofSetColor(255,0,0,alpha);
         ofSetColor(myColor,alpha);
 
         
        // ofSetColor(inBetween);
         
-        float r=map(i,0,anz-1,minWidth,maxWidth,3);
+        float r=map(i,0,anz-1,minWidth,maxWidth,10);
         ofxPolyToMesh(smooth, rough, r);
         smooth.draw();
         
@@ -382,11 +382,6 @@ void Wave::draw(){
 
 
 ofFbo Wave::getFbo(){
-     /* glEnable(GL_BLEND);
-       glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ONE_MINUS_SRC_COLOR);
-       glBlendEquation(GL_FUNC_SUBTRACT);*/
-   // ofDisableBlendMode();
-    
     waveFbo.begin();
     ofClear(0, 0, 0,0);
 
@@ -400,19 +395,11 @@ ofFbo Wave::getFbo(){
     float b=myColor.getBrightness();
     
     ofColor c1,c2;
-   // c1.setHsb(h,s,b,actualAlpha);
     c1.setHsb(h,s,b,255);
-
-    
-    //  c2.setHsb(h,s,b,0);
     c2.set(0,255);
     
-    
-    //ofColor c3=ofColor(255,actualAlpha);
    ofColor c3=ofColor(255,255);
-    
     ofColor bkg=backgroundcolor;
-    
     
     ofColor bkg_mix=initBackgroundcolor.lerp(bkg,actualLerp);
     ofColor white_bkg_mix=c3.lerp(bkg_mix,actualLerp);
@@ -420,72 +407,38 @@ ofFbo Wave::getFbo(){
 
     
     ofSetColor(255);
-   // ofDrawCircle(ofGetWidth()/2, ofGetHeight()/2, 20);
-
-    
-    
     ofPolyline rough;
     ofMesh smooth;
     rough.clear();
     smooth.clear();
-    //for (int x = 1; x < yvalues.size(); x++) {
     for (int x = 0; x < numActors-1; x++) {
         rough.addVertex(x*xspacing, ofGetHeight()/2+yvalues[x]);
     }
     
-    
-    
     int anz=10;
-    
-  
     ofPushMatrix();
-
     for(int i=anz-1;i>=0;i--){
-        //glDisable(GL_BLEND);
         s=ofMap(i,0,anz-1,0,255);
         c2.setSaturation(s);
         
         float ratio=ofMap(i, anz-1,0, 0, 1);
-        
-        
-
-        
-       // ofColor inBetween = c2.lerp(c3,ratio) ;
-        
-    ofColor inBetween = black_bkg_mix.lerp(white_bkg_mix,ratio) ;
+        ofColor inBetween = black_bkg_mix.lerp(white_bkg_mix,ratio) ;
 
         ofSetColor(inBetween);
-        
         
         float alpha=ofMap(i,0,anz-1,255,0);
         ofSetColor(255,alpha);
 
-        
        float r=ofMap(i,0,anz-1,minWidth,maxWidth);
-        
         ofxPolyToMesh(smooth, rough, r);
-        //ofxPolyToMesh(smooth, rough, 5);
-     //   ofTranslate(5,0);
         smooth.draw();
-        
     }
     ofPopMatrix();
     
 
     
-    /*ofPushMatrix();
-  
-        ofxPolyToMesh(smooth, rough, 25);
-        smooth.draw();
     ofPopMatrix();
-    */
-    
-    
-    ofPopMatrix();
-
-    
     waveFbo.end();
-   //  glDisable(GL_BLEND);
 
     return waveFbo;
     

@@ -43,8 +43,8 @@ class ofApp : public ofBaseApp{
     
     ofFbo fbo;
 
-    bool bUseShader=false;
-    bool bUseBlur=false;
+    bool bUseShader=true;
+    bool bUseBlur=true;
     
     bool bUseAlpha=true;
     
