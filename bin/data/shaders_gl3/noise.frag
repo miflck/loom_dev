@@ -63,7 +63,7 @@ void main(){
     
     float d =(length(gl_FragCoord.xy-pnt)/dotSize);
     //outputColor=vec4(smoothstep(dotSize,0, d),0.0,0.0,1.0);
-   outputColor = mix(vec4(.9),color2, smoothstep(dotSize, 0, d));
+   outputColor = mix(vec4(0.1),color2, smoothstep(dotSize, 0, d));
 
     //outputColor = texture(tex0, );
 

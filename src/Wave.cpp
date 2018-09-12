@@ -286,11 +286,11 @@ void Wave::draw(){
     for(int i=anz-1;i>=0;i--){
         
         //float alpha=ofMap(i,0,anz-1,255,60);
-        float alpha=ofMap(i,0,anz-1,255,0);
+        float alpha=ofMap(i,0,anz-1,255,10);
 
         ofSetColor(255,alpha);
        // float r=map(i,0,anz-1,minWidth,maxWidth,3);
-        float r=map(i,0,anz-1,minWidth,maxWidth,3);
+        float r=map(i,0,anz-1,minWidth,maxWidth,5);
 
         ofxPolyToMesh(smooth, rough, r);
         smooth.draw();

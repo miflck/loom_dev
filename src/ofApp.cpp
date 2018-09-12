@@ -94,7 +94,7 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
     ofPushMatrix();
- //   ofScale(0.072,0.072);
+   // ofScale(0.072,0.072);
     ofBackground(backgroundcolor);
         float blur = 2;
   
@@ -120,20 +120,22 @@ void ofApp::draw(){
     
     ofSetColor(255);
     
-   // fbo.begin();
-    ofEnableAlphaBlending();
-    //ofEnableBlendMode(OF_BLENDMODE_ADD);
-   // ofClear(0,0);
-    
-    
+    fbo.begin();
+   // ofEnableAlphaBlending();
+   // ofEnableBlendMode(OF_BLENDMODE_ADD);
+   ofClear(0,0);
+    glEnable(GL_BLEND);
+    glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+   // glBlendFunc(GL_SRC_ALPHA,  GL_ONE);
+
     
    // glEnable(GL_BLEND);
    // glBlendFunc(GL_SRC_ALPHA, GL_DST_ALPHA);
-   // glBlendEquation(GL_FUNC_ADD);
+   glBlendEquation(GL_FUNC_ADD);
     for(int i=0;i<waves.size();i++){
         waves[i]->draw();
     }
-   // fbo.end();
+    fbo.end();
    
     
     
@@ -160,7 +162,7 @@ void ofApp::draw(){
     */
     
     
-    ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+    //ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 
    /* fbo.draw(0,0);
     ofSetColor(255);
@@ -183,7 +185,7 @@ void ofApp::draw(){
 
     
     
-    /*
+    
     fboBlurOnePass.begin();
     ofClear(0,0);
     ofSetColor(255);
@@ -197,6 +199,12 @@ void ofApp::draw(){
  
     ofSetColor(255);
     fbo.draw(0, 0);
+    
+    ofSetColor(255);
+    //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    fbo.draw(0,0);
+  //  ofEnableAlphaBlending();
+    
     if(bUseBlur){
         shaderBlurX.end();
     }
@@ -242,18 +250,21 @@ void ofApp::draw(){
  
     
   
-
+    ofSetColor(255);
+    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     fboBlurTwoPass.draw(0,0);
     //blur.draw();
   if(bUseShader){
         shader.end();
     }
-     */
+    
     
    // ofSetColor(255);
-    //fbo.draw(0,0);
-    
-   // ofEnableAlphaBlending();
+   // glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+   // fbo.draw(0,0);
+    //glDisable(GL_BLEND);
+
+   ofEnableAlphaBlending();
     maske.draw(0,0);
     
 
