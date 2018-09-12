@@ -112,6 +112,10 @@ class Wave {
     void setPeriodDuration(float t);
     void setInitTime();
     
+    
+    void setAmplitudeTarget(int t);
+    void setAmplitudeDuration(float t);
+    
     float map(float in, float inMin, float inMax, float outMin, float outMax, float shaper);
    
     

@@ -139,7 +139,7 @@ void Wave::setup(int _angle,ofColor color){
     float t=30;    
     startAlpha=255;
     actualAlpha=255;
-    alphaTarget=0;
+    alphaTarget=255;
     fadeInitTime=ofGetElapsedTimef();
     fadeDuration=t;
     
@@ -152,7 +152,11 @@ void Wave::setup(int _angle,ofColor color){
     
     actualPeriod=period;
     periodStart=period;
+<<<<<<< HEAD
     periodTarget=200;
+=======
+    periodTarget=period;//500;
+>>>>>>> twolines
     periodInitTime=ofGetElapsedTimef();
     periodDuration=t;
     
