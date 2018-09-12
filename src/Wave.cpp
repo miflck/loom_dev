@@ -139,9 +139,9 @@ void Wave::setup(int _angle,ofColor color){
     float t=30;    
     startAlpha=255;
     actualAlpha=255;
-    alphaTarget=0;
+    alphaTarget=255;
     fadeInitTime=ofGetElapsedTimef();
-    fadeDuration=t;
+    fadeDuration=3;
     
     startAmplitude=0;
     actualAmplitude=0;
@@ -193,6 +193,8 @@ void Wave::setXSpacing(int _x){
 
 void Wave::startFadeOut(){
     alphaTarget=0;
+    fadeInitTime=ofGetElapsedTimef();
+
 }
 
 void Wave::update(){
@@ -263,16 +265,7 @@ void Wave::draw(){
     ofRotate(angle);
     ofTranslate(-ofGetWidth()/2,-ofGetHeight()/2);
     
-    float h=myColor.getHue();
-    float s=myColor.getSaturation();
-    float b=myColor.getBrightness();
-  
-    ofColor c1,c2;
-    c1.setHsb(h,s,b,actualAlpha);
-    c2.set(0,255);
-    
-    ofColor c3=ofColor(255,actualAlpha);
-   // ofSetLineWidth(10);
+   
     
     ofPolyline rough;
     ofMesh smooth;
@@ -284,93 +277,26 @@ void Wave::draw(){
     }
 
     
-    int anz=13;
+    int anz=10;
     
     int minWidth=5;
-    int maxWidth=45;
+    //int maxWidth=45;
+    int maxWidth=25;
+
     for(int i=anz-1;i>=0;i--){
         
-      /*  s=ofMap(i,0,anz-1,0,255);
-        c2.setSaturation(s);
-        
-        float ratio=ofMap(i, anz-1,0, 0, 1);
-        ofColor inBetween = c2.lerp(c3,ratio) ;
-        
-        */
-        float alpha=ofMap(i,0,anz-1,255,60);
-      //  ofSetColor(255,0,0,alpha);
-        ofSetColor(myColor,alpha);
+        //float alpha=ofMap(i,0,anz-1,255,60);
+        float alpha=ofMap(i,0,anz-1,255,0);
 
-        
-       // ofSetColor(inBetween);
-        
-        float r=map(i,0,anz-1,minWidth,maxWidth,10);
+        ofSetColor(255,alpha);
+       // float r=map(i,0,anz-1,minWidth,maxWidth,3);
+        float r=map(i,0,anz-1,minWidth,maxWidth,3);
+
         ofxPolyToMesh(smooth, rough, r);
         smooth.draw();
         
     }
     
-  /*
-    s=ofMap(4,0,4,0,255);
-    c2.setSaturation(s);
-    ofSetColor(c2);
-    
-    ofxPolyToMesh(smooth, rough, 25);
-    smooth.draw();
-    
-    
-
-    s=ofMap(3,0,4,0,255);
-    c2.setSaturation(s);
-    ofSetColor(c2);
-
-
-    ofxPolyToMesh(smooth, rough, 20);
-    smooth.draw();
-    
-    s=ofMap(2,0,4,0,255);
-    c2.setSaturation(s);
-    ofSetColor(c2);
-
-    ofxPolyToMesh(smooth, rough, 15);
-    smooth.draw();
-    
-
-    s=ofMap(1,0,4,0,255);
-    c2.setSaturation(s);
-    ofSetColor(c2);
-
-    ofxPolyToMesh(smooth, rough, 10);
-    smooth.draw();*/
-
-/*
-    // A simple way to draw the wave with an ellipse at each location
-    for (int x = 1; x < yvalues.size(); x++) {
-       // float s=ofMap(yvalues[x],-amplitude,amplitude,0,255);
-       // float b=ofMap(x,0,yvalues.size(),255,0);
-        
-        
-        
-        
-        ofSetColor(myColor);
-
-        //ofDrawLine(-200, , x*xspacing+200, ofGetHeight()/2+yvalues[x]);
-      //  ofDrawCircle(x*xspacing, ofGetHeight()/2+yvalues[x], radius);
-        
-        ofDrawLine((x-1)*xspacing,ofGetHeight()/2+yvalues[x-1],x*xspacing,ofGetHeight()/2+yvalues[x]);
-        
-        //ofSetColor(c1);
-
-       // ofDrawCircle(x*xspacing, ofGetHeight()/2+yvalues[x], radius-(radius/5));
-       // ofSetColor(c2);
-
-        //ofDrawCircle(x*xspacing, ofGetHeight()/2+yvalues[x], radius-(radius/6));
-
-        
-        // p.noStroke();
-        // p.ellipse(x*xspacing, p.height/2+yvalues[x], 5, 5);
-    }
-    */
     ofPopMatrix();
 
     
@@ -501,6 +427,9 @@ void Wave::setAmplitudeDuration(float t){
 
 }
 
+void Wave::setSpeed(float s){
+    speed=s;
+}
 
 
 float Wave::map(float in, float inMin, float inMax, float outMin, float outMax, float shaper){

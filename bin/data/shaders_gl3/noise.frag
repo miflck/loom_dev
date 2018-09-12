@@ -14,8 +14,12 @@ uniform sampler2DRect tex0;
 in vec2 texCoordVarying;
 
 const float dotSize = 4;
+
+//const float dotSize = 10;
+
 const float numDots=20;
 const float dSpace = 30;
+
 
 uniform sampler2DRect tex1;
 

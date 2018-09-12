@@ -76,6 +76,11 @@ class ofApp : public ofBaseApp{
     int numPlayer=0;
     int numPlayerBefore=0;
     
+    
+    
+    int minAmplitude;
+    int maxAmplitude;
+    
     //ofxBlur blur;
 
 

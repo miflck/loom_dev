@@ -116,6 +116,8 @@ class Wave {
     void setAmplitudeTarget(int t);
     void setAmplitudeDuration(float t);
     
+    void setSpeed(float s);
+    
     float map(float in, float inMin, float inMax, float outMin, float outMax, float shaper);
    
     

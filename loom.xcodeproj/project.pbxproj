@@ -61,6 +61,14 @@
 		E4B6FCAD0C3E899E008CF71C /* openFrameworks-Info.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.xml; path = "openFrameworks-Info.plist"; sourceTree = "<group>"; };
 		E4EB691F138AFCF100A09F29 /* CoreOF.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = CoreOF.xcconfig; path = ../../../libs/openFrameworksCompiled/project/osx/CoreOF.xcconfig; sourceTree = SOURCE_ROOT; };
 		E4EB6923138AFD0F00A09F29 /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
+		FA9DACD72148FD2C00EA4BA3 /* exclude.frag */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = exclude.frag; sourceTree = "<group>"; };
+		FA9DACD82148FD2C00EA4BA3 /* exclude.vert */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = exclude.vert; sourceTree = "<group>"; };
+		FA9DACD92148FD2C00EA4BA3 /* noise.frag */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = noise.frag; sourceTree = "<group>"; };
+		FA9DACDA2148FD2C00EA4BA3 /* noise.vert */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = noise.vert; sourceTree = "<group>"; };
+		FA9DACDB2148FD2C00EA4BA3 /* shaderBlurX.frag */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = shaderBlurX.frag; sourceTree = "<group>"; };
+		FA9DACDC2148FD2C00EA4BA3 /* shaderBlurX.vert */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = shaderBlurX.vert; sourceTree = "<group>"; };
+		FA9DACDD2148FD2C00EA4BA3 /* shaderBlurY.frag */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = shaderBlurY.frag; sourceTree = "<group>"; };
+		FA9DACDE2148FD2C00EA4BA3 /* shaderBlurY.vert */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = shaderBlurY.vert; sourceTree = "<group>"; };
 		FF2B018E24837032A4878576 /* ofxEasing.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxEasing.h; path = ../../../addons/ofxEasing/src/ofxEasing.h; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -164,6 +172,7 @@
 				E4B69E1F0A3A1BDC003C02F2 /* ofApp.h */,
 				25D3B9725592414556734B07 /* Wave.cpp */,
 				3A4AF7E7ADCFE2884307F92D /* Wave.hpp */,
+				FA9DACD62148FD2C00EA4BA3 /* shaders_gl3 */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -185,6 +194,22 @@
 			);
 			name = src;
 			sourceTree = "<group>";
+		};
+		FA9DACD62148FD2C00EA4BA3 /* shaders_gl3 */ = {
+			isa = PBXGroup;
+			children = (
+				FA9DACD72148FD2C00EA4BA3 /* exclude.frag */,
+				FA9DACD82148FD2C00EA4BA3 /* exclude.vert */,
+				FA9DACD92148FD2C00EA4BA3 /* noise.frag */,
+				FA9DACDA2148FD2C00EA4BA3 /* noise.vert */,
+				FA9DACDB2148FD2C00EA4BA3 /* shaderBlurX.frag */,
+				FA9DACDC2148FD2C00EA4BA3 /* shaderBlurX.vert */,
+				FA9DACDD2148FD2C00EA4BA3 /* shaderBlurY.frag */,
+				FA9DACDE2148FD2C00EA4BA3 /* shaderBlurY.vert */,
+			);
+			name = shaders_gl3;
+			path = bin/data/shaders_gl3;
+			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXGroup section */
 

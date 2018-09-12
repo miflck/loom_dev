@@ -40,7 +40,7 @@ void ofApp::setup(){
     
     
     
-    backgroundcolor.setHueAngle(hueAngle%360);
+   /* backgroundcolor.setHueAngle(hueAngle%360);
     waves.push_back(shared_ptr<Wave>(new Wave));
     waves.back().get()->setup(angle,backgroundcolor);
     
@@ -50,7 +50,12 @@ void ofApp::setup(){
     backgroundcolor.setHueAngle(hueAngle%360);
     waves.push_back(shared_ptr<Wave>(new Wave));
     waves.back().get()->setup(angle,backgroundcolor);
+    */
     
+    
+    
+    minAmplitude=ofGetHeight()/2;
+    maxAmplitude=ofGetHeight()*4;
     
 }
 
@@ -68,9 +73,12 @@ void ofApp::update(){
             waves[i]->setPeriodDuration(5);
             waves[i]->setInitTime();
             
-            waves[i]->setAmplitudeTarget(ofMap(numPlayer, 0, 10, 100, ofGetHeight()*3));
+            waves[i]->setAmplitudeTarget(ofMap(numPlayer, 0, 10, minAmplitude, maxAmplitude));
             waves[i]->setAmplitudeDuration(5);
             
+            
+            //waves[i]->setSpeed(ofMap(numPlayer, 0, 10, 0.05, 0.005));
+           
             cout<<ofMap(numPlayer, 0, 10, 800, 50)<<endl;
         }
         waves[i]->update();
@@ -92,13 +100,13 @@ void ofApp::draw(){
   
 
         ofSetColor(255);
-   
+ /*
     vector <ofFbo> fbos;
     
     for(int i=0;i<waves.size();i++){
         fbos.push_back(waves[i]->getFbo());
     }
-        
+   */
     
    // ofSetColor(backgroundcolor);
    // ofDrawRectangle(0,0,ofGetWidth(),ofGetHeight());
@@ -112,10 +120,10 @@ void ofApp::draw(){
     
     ofSetColor(255);
     
-    fbo.begin();
+   // fbo.begin();
     ofEnableAlphaBlending();
-    ofEnableBlendMode(OF_BLENDMODE_ADD);
-    ofClear(0,0);
+    //ofEnableBlendMode(OF_BLENDMODE_ADD);
+   // ofClear(0,0);
     
     
     
@@ -125,7 +133,7 @@ void ofApp::draw(){
     for(int i=0;i<waves.size();i++){
         waves[i]->draw();
     }
-    fbo.end();
+   // fbo.end();
    
     
     
@@ -175,11 +183,10 @@ void ofApp::draw(){
 
     
     
-    
+    /*
     fboBlurOnePass.begin();
     ofClear(0,0);
     ofSetColor(255);
-    
     ofSetColor(backgroundcolor);
     ofDrawRectangle(0,0,ofGetWidth(),ofGetHeight());
     
@@ -241,8 +248,9 @@ void ofApp::draw(){
   if(bUseShader){
         shader.end();
     }
+     */
     
-    
+   // ofSetColor(255);
     //fbo.draw(0,0);
     
    // ofEnableAlphaBlending();
@@ -293,6 +301,16 @@ void ofApp::keyPressed(int key){
         backgroundcolor.setHueAngle(hueAngle%360);
         waves.push_back(shared_ptr<Wave>(new Wave));
         waves.back().get()->setup(angle,backgroundcolor);
+        
+        
+        
+         waves.back().get()->setPeriodTarget(ofMap(numPlayer, 0, 10, 800, 100));
+         waves.back().get()->setPeriodDuration(5);
+         waves.back().get()->setInitTime();
+        
+         waves.back().get()->setAmplitudeTarget(ofMap(numPlayer, 0, 10, 100, ofGetHeight()*3));
+        waves.back().get()->setAmplitudeDuration(5);
+        
 
     }
     
@@ -362,6 +380,28 @@ void ofApp::keyPressed(int key){
     {
         numPlayer++;
         if(numPlayer>10)numPlayer=10;
+        
+        if(waves.size()<numPlayer){
+        angle=(angle+45)%360;
+        hueAngle+=10;
+        backgroundcolor.setHueAngle(hueAngle%360);
+        waves.push_back(shared_ptr<Wave>(new Wave));
+        waves.back().get()->setup(angle,backgroundcolor);
+        
+        
+        
+        waves.back().get()->setPeriodTarget(ofMap(numPlayer, 0, 10, 800, 100));
+        waves.back().get()->setPeriodDuration(5);
+        waves.back().get()->setInitTime();
+        
+        waves.back().get()->setAmplitudeTarget(ofMap(numPlayer, 0, 10, minAmplitude, maxAmplitude));
+        waves.back().get()->setAmplitudeDuration(5);
+            
+            
+            waves.back()->setSpeed(ofMap(numPlayer, 0, 10, 0.01, 0.005));
+        }
+        
+        
 
     }
     if (key == OF_KEY_DOWN)
