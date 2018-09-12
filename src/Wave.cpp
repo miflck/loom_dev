@@ -134,9 +134,7 @@ void Wave::setup(int _angle,ofColor color){
     
     
     
-    float t=30;
-    
-    
+    float t=30;    
     startAlpha=255;
     actualAlpha=255;
     alphaTarget=0;
