@@ -70,7 +70,8 @@ class ofApp : public ofBaseApp{
     ofImage maske;
     
     int hueAngle=0;
-    
+    int waveHueAngle=0;
+    ofColor wavecolor;
     
     
     int numPlayer=0;

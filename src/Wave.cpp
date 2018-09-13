@@ -110,8 +110,8 @@ void Wave::setup(int _angle,ofColor color){
 //myColor=ofColor( ofColor::fromHsb(colorangle,ofRandom(100,180),ofRandom(150,200),255));
   //  myColor=ofColor( ofColor::fromHsb(colorangle,200,200,255));
     
- //   myColor=ofColor(222,184,135);
-    myColor=ofColor(255);
+ //  myColor=ofColor(222,184,135);
+    myColor=ofColor(255,0,0);
 
     
     initBackgroundcolor=color;
@@ -137,9 +137,9 @@ void Wave::setup(int _angle,ofColor color){
     
     
     float t=30;    
-    startAlpha=255;
-    actualAlpha=255;
-    alphaTarget=255;
+    startAlpha=1;
+    actualAlpha=1;
+    alphaTarget=1;
     fadeInitTime=ofGetElapsedTimef();
     fadeDuration=3;
     
@@ -194,6 +194,8 @@ void Wave::setXSpacing(int _x){
 void Wave::startFadeOut(){
     alphaTarget=0;
     fadeInitTime=ofGetElapsedTimef();
+    
+    cout<<"----------START FADE OUT------------------"<<endl;
 
 }
 
@@ -202,7 +204,10 @@ void Wave::update(){
     auto now = ofGetElapsedTimef();
     auto endTime = fadeInitTime + fadeDuration;
     
-    actualAlpha = ofxeasing::map_clamp(now, fadeInitTime, endTime, startAlpha, alphaTarget, &ofxeasing::exp::easeIn);
+    actualAlpha = ofxeasing::map_clamp(now, fadeInitTime, endTime, startAlpha, alphaTarget, &ofxeasing::linear::easeNone);
+    
+    
+    cout<<actualAlpha<<" "<<alphaTarget<<endl;
     
     if(actualAlpha<=0){
         bShouldRemove=true;
@@ -288,7 +293,9 @@ void Wave::draw(){
         //float alpha=ofMap(i,0,anz-1,255,60);
         float alpha=ofMap(i,0,anz-1,255,10);
 
-        ofSetColor(255,alpha);
+       // ofSetColor(255,alpha);
+        ofSetColor(myColor,alpha*actualAlpha);
+
        // float r=map(i,0,anz-1,minWidth,maxWidth,3);
         float r=map(i,0,anz-1,minWidth,maxWidth,5);
 
@@ -387,7 +394,7 @@ void Wave::setState(int _state){
             break;
             
         case FADEOUT:
-
+            startFadeOut();
             break;
             
         default:

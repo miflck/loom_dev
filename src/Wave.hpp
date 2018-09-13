@@ -64,11 +64,15 @@ class Wave {
     
     
     
-    float startAlpha=255;
-    float actualAlpha=255;
-    float alphaTarget=0;
+    float startAlpha=1;
+    float actualAlpha=1;
+    float alphaTarget=1;
     float fadeInitTime;
     float fadeDuration=50000;
+    
+
+    
+    
     
     
     float startAmplitude;
