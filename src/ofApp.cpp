@@ -24,10 +24,9 @@ void ofApp::setup(){
     fboBlurOnePass.allocate(screenwidth,screenheight,GL_RGBA);
     fboBlurTwoPass.allocate(screenwidth,screenheight,GL_RGBA);
 
-    fboBlurOnePass_end.allocate(screenwidth,screenheight,GL_RGBA);
-    fboBlurTwoPass_end.allocate(screenwidth,screenheight,GL_RGBA);
-    
-    
+   
+   shaderBlurOnePass.allocate(screenwidth,screenheight,GL_RGBA);
+   shaderBlurTwoPass.allocate(screenwidth,screenheight,GL_RGBA);
     
     fboShader.allocate(screenwidth,screenheight,GL_RGBA);
     fboShader.begin();
@@ -229,6 +228,7 @@ fboShader.getTextureReference().getTextureData().bFlipTexture = true;
         shader.setUniform2f("u_resolution", screenwidth,screenheight);
        // shader.setUniformTexture("tex0", fbo.getTextureReference(), 1);
        shader.setUniformTexture("tex1", fboBlurTwoPass.getTextureReference(), 1);
+     //  shader.setUniformTexture("tex1", fbo.getTextureReference(), 1);
 
         shader.setUniform1f("time", ofGetElapsedTimef());
         float mousePosition = ofGetMouseX();
@@ -244,6 +244,7 @@ fboShader.getTextureReference().getTextureData().bFlipTexture = true;
     ofSetColor(255);
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     fboBlurTwoPass.draw(0,0);
+   // fbo.draw(0,0);
     //blur.draw();
   if(bUseShader){
         shader.end();
@@ -255,12 +256,54 @@ fboShader.getTextureReference().getTextureData().bFlipTexture = true;
    // fboShader.getTextureReference().getTextureData().bFlipTexture = true;
 
     
-    fboShader.draw(ofGetWidth()/2-fboShader.getWidth()/2,ofGetHeight()/2-fboShader.getHeight()/2);
+   // fboShader.draw(ofGetWidth()/2-fboShader.getWidth()/2,ofGetHeight()/2-fboShader.getHeight()/2);
     
 
     
+  /*  blur=5;
+    
+    shaderBlurOnePass.begin();
+    ofClear(0,0);
+    // ofSetColor(255);
+    ofSetColor(backgroundcolor);
+    ofDrawRectangle(0,0,screenwidth,screenheight);
+    
+    if(bUseBlur){
+        shaderBlurX.begin();
+        shaderBlurX.setUniform1f("blurAmnt", blur);
+    }
+    
+   
+    
+    ofSetColor(255);
+    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    fboShader.draw(0,0);
+    //  ofEnableAlphaBlending();
+    
+    if(bUseBlur){
+        shaderBlurX.end();
+    }
+    shaderBlurOnePass.end();
     
     
+    shaderBlurTwoPass.begin();
+    ofClear(0,0);
+    
+    if(bUseBlur){
+        shaderBlurY.begin();
+        shaderBlurY.setUniform1f("blurAmnt", blur);
+    }
+    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    
+    shaderBlurOnePass.draw(0, 0);
+    if(bUseBlur){
+        shaderBlurY.end();
+    }
+    shaderBlurTwoPass.end();
+    */
+    
+    fboShader.draw(ofGetWidth()/2-fboShader.getWidth()/2,ofGetHeight()/2-fboShader.getHeight()/2);
+
     
     
     
@@ -293,9 +336,9 @@ fboShader.getTextureReference().getTextureData().bFlipTexture = true;
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
     
-    if(key=='a'){
+  /*  if(key=='a'){
         bUseAlpha=!bUseAlpha;
-    }
+    }*/
     
     if(key=='s'){
         bUseShader=!bUseShader;
@@ -303,7 +346,8 @@ void ofApp::keyPressed(int key){
 
     if(key=='b'){
         bUseBlur=!bUseBlur;
-    }
+   }
+    /*
     if(key=='c'){
         bUseBlending=!bUseBlending;
     }
@@ -313,8 +357,9 @@ void ofApp::keyPressed(int key){
             waves[i]->bUseBlending=!waves[i]->bUseBlending;
         }
     }
+ */
     
-    if(key=='w'){
+ /*   if(key=='w'){
         angle=(angle+45)%360;
         hueAngle+=10;
       //  backgroundcolor.setHueAngle(hueAngle%360);
@@ -339,7 +384,7 @@ void ofApp::keyPressed(int key){
         colorangle=(colorangle+80)%255;
         waves.push_back(shared_ptr<Wave>(new Wave));
         waves.back().get()->setup(angle,colorangle);
-    }
+    }*/
     
     
     if(key=='n'){
@@ -359,41 +404,42 @@ void ofApp::keyPressed(int key){
     
     
     if(key=='1'){
+       minWidth=2;
+       maxWidth=45;
+        mapShaper=8;
         for(int i=0;i<waves.size();i++){
-            waves[i]->setPeriod(100);
+            waves[i]->minWidth=minWidth;
+            waves[i]->maxWidth=maxWidth;
+            waves[i]->mapShaper=mapShaper;
         }
     }
     
     if(key=='2'){
+        minWidth=4;
+        maxWidth=45;
+        mapShaper=8;
         for(int i=0;i<waves.size();i++){
-            waves[i]->setPeriod(200);
+            waves[i]->minWidth=minWidth;
+            waves[i]->maxWidth=maxWidth;
+            waves[i]->mapShaper=mapShaper;
         }
     }
+    
+    
     
     if(key=='3'){
+        minWidth=4;
+        maxWidth=65;
+        mapShaper=6;
         for(int i=0;i<waves.size();i++){
-            waves[i]->setPeriod(1000);
+            waves[i]->minWidth=minWidth;
+            waves[i]->maxWidth=maxWidth;
+            waves[i]->mapShaper=mapShaper;
         }
     }
     
-    
-    if(key=='7'){
-        for(int i=0;i<waves.size();i++){
-            waves[i]->setXSpacing(3);
-        }
-    }
-    
-    if(key=='8'){
-        for(int i=0;i<waves.size();i++){
-            waves[i]->setXSpacing(10);
-        }
-    }
-    
-    if(key=='9'){
-        for(int i=0;i<waves.size();i++){
-            waves[i]->setXSpacing(100);
-        }
-    }
+   
+  
     
     if (key == OF_KEY_UP)
     {
@@ -425,7 +471,9 @@ void ofApp::keyPressed(int key){
         waves.back().get()->myColor=wavecolor;
 
             
-            
+           waves.back().get()->minWidth=minWidth;
+          waves.back().get()->maxWidth=maxWidth;
+          waves.back().get()->mapShaper=mapShaper;
            
             
            // waves.back()->setSpeed(ofMap(numPlayer, 0, 10, 0.01, 0.005));

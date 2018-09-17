@@ -114,8 +114,9 @@ class Wave {
     
     float getAlpha();
     
-    int minWidth=5;
-    int maxWidth=25;
+    int minWidth=4;
+    int maxWidth=45;
+    float mapShaper=8;
     
     ofColor backgroundcolor;
     ofColor initBackgroundcolor;

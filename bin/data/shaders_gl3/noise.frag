@@ -40,6 +40,7 @@ void main(){
     
     
     outputColor = mix(vec4(0),color2, smoothstep(dotSize, 0, d));
+  //  outputColor=color2;
     //vec4 color;
 
    

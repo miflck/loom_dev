@@ -47,12 +47,12 @@ class ofApp : public ofBaseApp{
     
     ofFbo fbo;
     
-    ofFbo fboBlurOnePass_end;
-    ofFbo fboBlurTwoPass_end;
+
 
     
     ofFbo fboShader;
-
+    ofFbo shaderBlurOnePass;
+    ofFbo shaderBlurTwoPass;
     
     
     
@@ -104,6 +104,11 @@ class ofApp : public ofBaseApp{
     
     
     //ofxBlur blur;
+    
+    
+    int minWidth=4;
+    int maxWidth=45;
+    int mapShaper=8;
 
 
     

@@ -286,9 +286,8 @@ void Wave::draw(){
     
     int anz=10;
     
-    int minWidth=4;
-    //int maxWidth=45;
-    int maxWidth=45;
+   //  minWidth=4;
+   //  maxWidth=45;
 
     for(int i=anz-1;i>=0;i--){
         
@@ -299,7 +298,7 @@ void Wave::draw(){
         ofSetColor(myColor,alpha*actualAlpha);
 
        // float r=map(i,0,anz-1,minWidth,maxWidth,3);
-        float r=map(i,0,anz-1,minWidth,maxWidth,8);
+        float r=map(i,0,anz-1,minWidth,maxWidth,mapShaper);
 
         ofxPolyToMesh(smooth, rough, r);
         smooth.draw();
