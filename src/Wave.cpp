@@ -11,7 +11,7 @@
 
 
 void Wave::setup(int _angle,int _colorangle){
-    w = ofGetWidth()+500;
+    w = screenwidth+500;
     dx = (TWO_PI / period) * xspacing;
    // yvalues = new Array(p.floor(w/xspacing));
     for (int i=0;i<floor(w/xspacing);i++){
@@ -44,13 +44,13 @@ void Wave::setup(int _angle,int _colorangle){
     
     
     
-    waveFbo.allocate(ofGetWidth(), ofGetHeight(),GL_RGBA);
+    waveFbo.allocate(screenwidth, screenheight,GL_RGBA);
     waveFbo.getTextureReference().getTextureData().bFlipTexture = false;
 
     
     fadeInitTime=ofGetElapsedTimef();
     
-     amplitude = ofGetHeight()/2; // Height of wave
+     amplitude = screenheight/2; // Height of wave
 
     
     
@@ -84,7 +84,7 @@ void Wave::setup(int _angle,int _colorangle){
 
 void Wave::setup(int _angle,ofColor color){
   //  w = ofGetWidth()+5;
-    w = ofGetWidth()+500;
+    w = screenwidth+500;
 
     dx = (TWO_PI / period) * xspacing;
     // yvalues = new Array(p.floor(w/xspacing));
@@ -100,7 +100,7 @@ void Wave::setup(int _angle,ofColor color){
     angle=_angle;
     
    // speed=ofRandom(-0.005,-0.01);
-    speed=ofRandom(-0.01,-0.05);
+    speed=ofRandom(-0.01,-0.005);
 
     colorangle=(color.getHueAngle()+180);
     colorangle=colorangle%255;
@@ -123,7 +123,7 @@ void Wave::setup(int _angle,ofColor color){
     
     
     
-    waveFbo.allocate(ofGetWidth(), ofGetHeight(),GL_RGBA);
+    waveFbo.allocate(screenwidth,screenheight,GL_RGBA);
   //  waveFbo.getTextureReference().getTextureData().bFlipTexture = false;
     /*waveFbo.begin();
     ofClear(0,0,0,0);
@@ -131,7 +131,7 @@ void Wave::setup(int _angle,ofColor color){
     */
     fadeInitTime=ofGetElapsedTimef();
     
-    amplitude = ofGetHeight()/2; // Height of wave
+    amplitude = screenheight/2; // Height of wave
     
     
     
@@ -141,7 +141,7 @@ void Wave::setup(int _angle,ofColor color){
     actualAlpha=1;
     alphaTarget=1;
     fadeInitTime=ofGetElapsedTimef();
-    fadeDuration=3;
+    fadeDuration=1;
     
     startAmplitude=0;
     actualAmplitude=0;
@@ -207,7 +207,6 @@ void Wave::update(){
     actualAlpha = ofxeasing::map_clamp(now, fadeInitTime, endTime, startAlpha, alphaTarget, &ofxeasing::linear::easeNone);
     
     
-    cout<<actualAlpha<<" "<<alphaTarget<<endl;
     
     if(actualAlpha<=0){
         bShouldRemove=true;
@@ -219,11 +218,11 @@ void Wave::update(){
     actualLerp = ofxeasing::map_clamp(now, lerpInitTime, lerpEndTime, startLerp, lerpTarget, &ofxeasing::linear::easeOut);
 
     auto amplitudeEndTime = amplitudeInitTime + amplitudeDuration;
-    actualAmplitude = ofxeasing::map_clamp(now, amplitudeInitTime, amplitudeEndTime, startAmplitude, amplitudeTarget, &ofxeasing::linear::easeInOut);
+    actualAmplitude = ofxeasing::map_clamp(now, amplitudeInitTime, amplitudeEndTime, startAmplitude, amplitudeTarget, &ofxeasing::linear::easeNone);
     
     auto periodEndTime = periodInitTime + periodDuration;
     
-    actualPeriod = int(ofxeasing::map_clamp(now, periodInitTime, periodEndTime, periodStart, periodTarget, &ofxeasing::linear::easeInOut));
+    actualPeriod = int(ofxeasing::map_clamp(now, periodInitTime, periodEndTime, periodStart, periodTarget, &ofxeasing::linear::easeNone));
    
     setPeriod(actualPeriod);
     
@@ -266,10 +265,13 @@ void Wave::update(){
 void Wave::draw(){
     
     ofPushMatrix();
-    ofTranslate(ofGetWidth()/2,ofGetHeight()/2);
+    //ofTranslate(ofGetWidth()/2,ofGetHeight()/2);
+    ofTranslate(500,500);
+
     ofRotate(angle);
-    ofTranslate(-ofGetWidth()/2,-ofGetHeight()/2);
-    
+   // ofTranslate(-ofGetWidth()/2,-ofGetHeight()/2);
+    ofTranslate(-500,-500);
+
    
     
     ofPolyline rough;
@@ -278,15 +280,15 @@ void Wave::draw(){
     smooth.clear();
     //for (int x = 1; x < yvalues.size(); x++) {
     for (int x = 0; x < numActors-1; x++) {
-        rough.addVertex(x*xspacing, ofGetHeight()/2+yvalues[x]);
+        rough.addVertex(x*xspacing, screenheight/2+yvalues[x]);
     }
 
     
     int anz=10;
     
-    int minWidth=5;
+    int minWidth=4;
     //int maxWidth=45;
-    int maxWidth=25;
+    int maxWidth=45;
 
     for(int i=anz-1;i>=0;i--){
         
@@ -297,7 +299,7 @@ void Wave::draw(){
         ofSetColor(myColor,alpha*actualAlpha);
 
        // float r=map(i,0,anz-1,minWidth,maxWidth,3);
-        float r=map(i,0,anz-1,minWidth,maxWidth,5);
+        float r=map(i,0,anz-1,minWidth,maxWidth,8);
 
         ofxPolyToMesh(smooth, rough, r);
         smooth.draw();

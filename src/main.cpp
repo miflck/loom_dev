@@ -7,8 +7,10 @@ int main( ){
     settings.setGLVersion(3, 2); //we define the OpenGL version we want to use
     settings.width = 1000;
     settings.height = 1000;
- //   settings.width = 72;
-  //  settings.height = 72;
+    settings.windowMode = OF_FULLSCREEN;
+
+    //settings.width = 72;
+//settings.height = 72;
     
     
     ofCreateWindow(settings);

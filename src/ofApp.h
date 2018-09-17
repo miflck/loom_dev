@@ -9,6 +9,10 @@
 class ofApp : public ofBaseApp{
 
 	public:
+    
+    int screenwidth=1000;
+    int screenheight=1000;
+    
 		void setup();
 		void update();
 		void draw();
@@ -42,7 +46,16 @@ class ofApp : public ofBaseApp{
     
     
     ofFbo fbo;
+    
+    ofFbo fboBlurOnePass_end;
+    ofFbo fboBlurTwoPass_end;
 
+    
+    ofFbo fboShader;
+
+    
+    
+    
     bool bUseShader=true;
     bool bUseBlur=true;
     
@@ -81,6 +94,14 @@ class ofApp : public ofBaseApp{
     
     int minAmplitude;
     int maxAmplitude;
+    float amplitudeDuration;
+    
+    int minPeriod;
+    int maxPeriod;
+    float periodDuration;
+    
+    int maxPlayers;
+    
     
     //ofxBlur blur;
 

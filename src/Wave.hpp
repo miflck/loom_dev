@@ -15,8 +15,17 @@
 #define WAVE 2
 #define FADEOUT 3
 
+
+
+
 class Wave {
+    
+
     public:
+    
+    int screenwidth=1000;
+    int screenheight=1000;
+    
         void setup(int _angle, int _colorangle);
     
     void setup(int _angle, ofColor color);
@@ -29,7 +38,7 @@ class Wave {
     int xspacing = 3;    // Distance between each horizontal location
     int w;                // Width of entire wave
     float theta = 0.0;      // Start angle at 0
-    float amplitude = ofGetHeight()/2; // Height of wave
+    float amplitude = screenheight/2; // Height of wave
     float period = ofRandom(800.0,1000);   // How many pixels before the wave repeats
     float dx;               // Value for incrementing x
     //float yvalues;  // Using an array to store height values for the wave

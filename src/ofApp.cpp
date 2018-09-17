@@ -16,13 +16,25 @@ void ofApp::setup(){
     shaderBlurY.load("shaders_gl3/shaderBlurY");
     
     
-    fbo.allocate(ofGetWidth(), ofGetHeight(),GL_RGBA);
+    fbo.allocate(screenwidth,screenheight,GL_RGBA);
     fbo.begin();
     ofClear(255,255);
     fbo.end();
     
-    fboBlurOnePass.allocate(ofGetWidth(), ofGetHeight(),GL_RGBA);
-    fboBlurTwoPass.allocate(ofGetWidth(), ofGetHeight(),GL_RGBA);
+    fboBlurOnePass.allocate(screenwidth,screenheight,GL_RGBA);
+    fboBlurTwoPass.allocate(screenwidth,screenheight,GL_RGBA);
+
+    fboBlurOnePass_end.allocate(screenwidth,screenheight,GL_RGBA);
+    fboBlurTwoPass_end.allocate(screenwidth,screenheight,GL_RGBA);
+    
+    
+    
+    fboShader.allocate(screenwidth,screenheight,GL_RGBA);
+    fboShader.begin();
+    ofClear(255,255);
+    fboShader.end();
+    
+    
     
     colorangle=0;
   
@@ -54,12 +66,20 @@ void ofApp::setup(){
     
     
     
-    minAmplitude=ofGetHeight()/2;
-    maxAmplitude=ofGetHeight()*4;
+    minAmplitude=screenheight/2;
+    maxAmplitude=screenheight*4;
     
-    wavecolor=ofColor(255,0,0);
+    minPeriod=200;
+    maxPeriod=900;
+    
+    //wavecolor=ofColor(255,0,0);
+    wavecolor.setHsb(0, 200, 200);
     waveHueAngle=0;
-
+    
+    maxPlayers=15;
+    
+    amplitudeDuration=0.5;
+    periodDuration=0.5;
     
 }
 
@@ -81,18 +101,17 @@ void ofApp::update(){
             
             
             
-            waves[i]->setPeriodTarget(ofMap(numPlayer, 0, 10, 800, 100));
-            waves[i]->setPeriodDuration(5);
-            waves[i]->setInitTime();
+         //  waves[i]->setPeriodTarget(ofMap(numPlayer, 0, 10, maxPeriod, minPeriod));
+         //   waves[i]->setPeriodDuration(5);
+         //   waves[i]->setInitTime();
             
-            waves[i]->setAmplitudeTarget(ofMap(numPlayer, 0, 10, minAmplitude, maxAmplitude));
-            waves[i]->setAmplitudeDuration(5);
+        // waves[i]->setAmplitudeTarget(ofMap(numPlayer, 0, 10, minAmplitude, maxAmplitude));
+          //  waves[i]->setAmplitudeDuration(5);
             
            // waves[i]->myColor=wavecolor;
             
             //waves[i]->setSpeed(ofMap(numPlayer, 0, 10, 0.05, 0.005));
            
-            cout<<ofMap(numPlayer, 0, 10, 800, 50)<<endl;
         }
       //  waves[i]->setSpeed(ofMap(ofGetMouseX(), 0, ofGetWidth(), 0.005, 1));
 
@@ -109,7 +128,7 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
     ofPushMatrix();
-   // ofScale(0.072,0.072);
+    //ofScale(0.072,0.072);
     ofBackground(backgroundcolor);
         float blur = 2;
   
@@ -138,7 +157,8 @@ void ofApp::draw(){
     fbo.begin();
 
     ofClear(0,0);
-    glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+   // glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+   glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
    glBlendEquation(GL_FUNC_ADD);
     for(int i=0;i<waves.size();i++){
@@ -158,7 +178,7 @@ void ofApp::draw(){
     ofClear(0,0);
    // ofSetColor(255);
     ofSetColor(backgroundcolor);
-   ofDrawRectangle(0,0,ofGetWidth(),ofGetHeight());
+   ofDrawRectangle(0,0,screenwidth,screenheight);
     
     if(bUseBlur){
         shaderBlurX.begin();
@@ -198,14 +218,15 @@ void ofApp::draw(){
   
 
     
-
     
     
-
+    fboShader.begin();
+    ofClear(0,0);
+fboShader.getTextureReference().getTextureData().bFlipTexture = true;
     
    if(bUseShader){
         shader.begin();
-        shader.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
+        shader.setUniform2f("u_resolution", screenwidth,screenheight);
        // shader.setUniformTexture("tex0", fbo.getTextureReference(), 1);
        shader.setUniformTexture("tex1", fboBlurTwoPass.getTextureReference(), 1);
 
@@ -228,6 +249,20 @@ void ofApp::draw(){
         shader.end();
     }
     
+    fboShader.end();
+
+    
+   // fboShader.getTextureReference().getTextureData().bFlipTexture = true;
+
+    
+    fboShader.draw(ofGetWidth()/2-fboShader.getWidth()/2,ofGetHeight()/2-fboShader.getHeight()/2);
+    
+
+    
+    
+    
+    
+    
     
    // ofSetColor(255);
   // glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
@@ -237,7 +272,7 @@ void ofApp::draw(){
    ofEnableAlphaBlending();
     ofSetColor(0);
 
-    maske.draw(0,0);
+    maske.draw(ofGetWidth()/2-500,ofGetHeight()/2-500);
     
 
 //    blur.draw();
@@ -247,11 +282,11 @@ void ofApp::draw(){
     string info = "";
     info += "FPS: "+ofToString(ofGetFrameRate())+"\n";
     info += "num Player: "+ofToString(numPlayer)+"\n";
-    info += "Speed: "+ofToString(ofMap(ofGetMouseX(), 0, ofGetWidth(), 0.005, 1))+"\n";
+    info += "Speed: "+ofToString(ofMap(ofGetMouseX(), 0,screenwidth, 0.005, 1))+"\n";
 
     
     ofSetColor(255);
-    ofDrawBitmapString(info, 10, 10);
+   ofDrawBitmapString(info, 10, 10);
    
 }
 
@@ -289,11 +324,11 @@ void ofApp::keyPressed(int key){
         
         
          waves.back().get()->setPeriodTarget(ofMap(numPlayer, 0, 10, 800, 100));
-         waves.back().get()->setPeriodDuration(5);
+         waves.back().get()->setPeriodDuration(periodDuration);
          waves.back().get()->setInitTime();
         
-         waves.back().get()->setAmplitudeTarget(ofMap(numPlayer, 0, 10, 100, ofGetHeight()*3));
-        waves.back().get()->setAmplitudeDuration(5);
+         waves.back().get()->setAmplitudeTarget(ofMap(numPlayer, 0, 10, 100, screenheight*3));
+        waves.back().get()->setAmplitudeDuration(amplitudeDuration);
         
 
     }
@@ -363,15 +398,15 @@ void ofApp::keyPressed(int key){
     if (key == OF_KEY_UP)
     {
         numPlayer++;
-        if(numPlayer>10)numPlayer=10;
+        if(numPlayer>maxPlayers)numPlayer=maxPlayers;
         
         if(waves.size()<numPlayer){
         angle=(angle+45)%360;
         hueAngle+=10;
   
             
-            waveHueAngle+=1;
-            wavecolor.setHueAngle(waveHueAngle%360);
+        waveHueAngle+=5;
+        wavecolor.setHueAngle(waveHueAngle%360);
             
             
        // backgroundcolor.setHueAngle(hueAngle%360);
@@ -380,12 +415,12 @@ void ofApp::keyPressed(int key){
         
         
         
-        waves.back().get()->setPeriodTarget(ofMap(numPlayer, 0, 10, 800, 100));
-        waves.back().get()->setPeriodDuration(20);
+        waves.back().get()->setPeriodTarget(ofMap(numPlayer, 0, maxPlayers, maxPeriod, minPeriod));
+        waves.back().get()->setPeriodDuration(periodDuration);
         waves.back().get()->setInitTime();
         
-        waves.back().get()->setAmplitudeTarget(ofMap(numPlayer, 0, 10, minAmplitude, maxAmplitude));
-        waves.back().get()->setAmplitudeDuration(20);
+        waves.back().get()->setAmplitudeTarget(ofMap(numPlayer, 0, maxPlayers, minAmplitude, maxAmplitude));
+        waves.back().get()->setAmplitudeDuration(amplitudeDuration);
             
         waves.back().get()->myColor=wavecolor;
 
