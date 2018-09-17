@@ -80,6 +80,36 @@ void ofApp::setup(){
     amplitudeDuration=0.5;
     periodDuration=0.5;
     
+    ofParamAmplitudeDuration.set("amplitude T",0.5,0.5,50);
+    ofParamPeriodDuration.set("period T",0.5,0.5,50);
+
+    ofParamMinWidth.set("minwidth",4,1,10);
+    ofParamMaxWidth.set("maxwidth",45,10,70);
+    ofParamMapShaper.set("mapShaper",8,1,15);
+    
+    ofParameterBlending.set("Additive Blend", true);
+    
+    gui = new ofxDatGui();
+    gui->addLabel("gui from of_parameters");
+    gui->addSlider(ofParamMinWidth);
+    gui->addSlider(ofParamMaxWidth);
+    gui->addSlider(ofParamMapShaper);
+    gui->addLabel("Speed");
+    gui->addSlider(ofParamPeriodDuration);
+    gui->addSlider(ofParamAmplitudeDuration);
+    gui->addLabel("Settings");
+    
+    gui->addToggle("Screen Simulation",true);
+    gui->addToggle("Blur",true);
+    gui->addToggle("Alphablending",false);
+    
+
+
+    gui->onSliderEvent(this, &ofApp::onSliderEvent);
+    gui->onToggleEvent(this, &ofApp::onToggleEvent);
+
+    
+    
 }
 
 //--------------------------------------------------------------
@@ -122,6 +152,8 @@ void ofApp::update(){
     ofRemove(waves,shouldRemove);
     numPlayerBefore=numPlayer;
 
+   // minWidthslider->update();
+ 
 }
 
 //--------------------------------------------------------------
@@ -156,9 +188,11 @@ void ofApp::draw(){
     fbo.begin();
 
     ofClear(0,0);
-   // glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-   glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-
+    if(bUseBlending){
+        glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    }else{
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+    }
    glBlendEquation(GL_FUNC_ADD);
     for(int i=0;i<waves.size();i++){
         waves[i]->draw();
@@ -259,8 +293,8 @@ fboShader.getTextureReference().getTextureData().bFlipTexture = true;
    // fboShader.draw(ofGetWidth()/2-fboShader.getWidth()/2,ofGetHeight()/2-fboShader.getHeight()/2);
     
 
-    
-  /*  blur=5;
+    /*
+    blur=8;
     
     shaderBlurOnePass.begin();
     ofClear(0,0);
@@ -305,7 +339,7 @@ fboShader.getTextureReference().getTextureData().bFlipTexture = true;
     fboShader.draw(ofGetWidth()/2-fboShader.getWidth()/2,ofGetHeight()/2-fboShader.getHeight()/2);
 
     
-    
+   // shaderBlurTwoPass.draw(ofGetWidth()/2-fboShader.getWidth()/2,ofGetHeight()/2-fboShader.getHeight()/2);
     
    // ofSetColor(255);
   // glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
@@ -325,11 +359,10 @@ fboShader.getTextureReference().getTextureData().bFlipTexture = true;
     string info = "";
     info += "FPS: "+ofToString(ofGetFrameRate())+"\n";
     info += "num Player: "+ofToString(numPlayer)+"\n";
-    info += "Speed: "+ofToString(ofMap(ofGetMouseX(), 0,screenwidth, 0.005, 1))+"\n";
 
-    
     ofSetColor(255);
-   ofDrawBitmapString(info, 10, 10);
+    ofDrawBitmapString(info, 10, 350);
+    
    
 }
 
@@ -347,11 +380,14 @@ void ofApp::keyPressed(int key){
     if(key=='b'){
         bUseBlur=!bUseBlur;
    }
-    /*
+  
     if(key=='c'){
         bUseBlending=!bUseBlending;
     }
-    
+    if(key=='g'){
+        gui->setVisible(!gui->getVisible());
+    }
+      /*
     if(key=='C'){
         for(int i=0;i<waves.size();i++){
             waves[i]->bUseBlending=!waves[i]->bUseBlending;
@@ -387,54 +423,43 @@ void ofApp::keyPressed(int key){
     }*/
     
     
-    if(key=='n'){
-        bUseSingleBlend=!bUseSingleBlend;
-    }
+
     
-    if(key=='e'){
-        bUseExclude=!bUseExclude;
-    }
-    
-    if(key=='r' && waves.size()>0){
-        waves[0]->bShouldRemove=true;
-        
-     //   waves.erase( waves.begin()+1 );
-        
-    }
+
     
     
     if(key=='1'){
-       minWidth=2;
-       maxWidth=45;
-        mapShaper=8;
+       ofParamMinWidth=2;
+       ofParamMaxWidth=45;
+        ofParamMapShaper=8;
         for(int i=0;i<waves.size();i++){
-            waves[i]->minWidth=minWidth;
-            waves[i]->maxWidth=maxWidth;
-            waves[i]->mapShaper=mapShaper;
+            waves[i]->minWidth=ofParamMinWidth;
+            waves[i]->maxWidth=ofParamMaxWidth;
+            waves[i]->mapShaper=ofParamMapShaper;
         }
     }
     
     if(key=='2'){
-        minWidth=4;
-        maxWidth=45;
-        mapShaper=8;
+        ofParamMinWidth=4;
+        ofParamMaxWidth=45;
+        ofParamMapShaper=8;
         for(int i=0;i<waves.size();i++){
-            waves[i]->minWidth=minWidth;
-            waves[i]->maxWidth=maxWidth;
-            waves[i]->mapShaper=mapShaper;
+            waves[i]->minWidth=ofParamMinWidth;
+            waves[i]->maxWidth=ofParamMaxWidth;
+            waves[i]->mapShaper=ofParamMapShaper;
         }
     }
     
     
     
     if(key=='3'){
-        minWidth=4;
-        maxWidth=65;
-        mapShaper=6;
+        ofParamMinWidth=4;
+        ofParamMaxWidth=65;
+        ofParamMapShaper=6;
         for(int i=0;i<waves.size();i++){
-            waves[i]->minWidth=minWidth;
-            waves[i]->maxWidth=maxWidth;
-            waves[i]->mapShaper=mapShaper;
+            waves[i]->minWidth=ofParamMinWidth;
+            waves[i]->maxWidth=ofParamMaxWidth;
+            waves[i]->mapShaper=ofParamMapShaper;
         }
     }
     
@@ -462,18 +487,18 @@ void ofApp::keyPressed(int key){
         
         
         waves.back().get()->setPeriodTarget(ofMap(numPlayer, 0, maxPlayers, maxPeriod, minPeriod));
-        waves.back().get()->setPeriodDuration(periodDuration);
+        waves.back().get()->setPeriodDuration(ofParamPeriodDuration);
         waves.back().get()->setInitTime();
         
         waves.back().get()->setAmplitudeTarget(ofMap(numPlayer, 0, maxPlayers, minAmplitude, maxAmplitude));
-        waves.back().get()->setAmplitudeDuration(amplitudeDuration);
+        waves.back().get()->setAmplitudeDuration(ofParamAmplitudeDuration);
             
         waves.back().get()->myColor=wavecolor;
 
             
-           waves.back().get()->minWidth=minWidth;
-          waves.back().get()->maxWidth=maxWidth;
-          waves.back().get()->mapShaper=mapShaper;
+           waves.back().get()->minWidth=ofParamMinWidth;
+          waves.back().get()->maxWidth=ofParamMaxWidth;
+          waves.back().get()->mapShaper=ofParamMapShaper;
            
             
            // waves.back()->setSpeed(ofMap(numPlayer, 0, 10, 0.01, 0.005));
@@ -555,3 +580,55 @@ void ofApp::gotMessage(ofMessage msg){
 void ofApp::dragEvent(ofDragInfo dragInfo){ 
 
 }
+
+void ofApp::onParamIntChanged(int & n)
+{
+    // cout << "onParamIntChanged "<< n << endl;
+}
+
+void ofApp::onParamFloatChanged(float & f)
+{
+    // cout << "onParamFloatChanged "<< f << endl;
+}
+
+void ofApp::onSliderEvent(ofxDatGuiSliderEvent e)
+{
+  /*  if(e.target == minWidthSlider){
+       // ofSetBackgroundColor(ofColor::white*e.scale);
+        cout << e.target->getLabel() << " value = "; e.target->printValue();
+    }   else if (e.target == sliderInt){
+        cout << e.target->getLabel() << " value = "; e.target->printValue();
+    }   else if (e.target == sliderFloat){
+        cout << e.target->getLabel() << " value = "; e.target->printValue();
+    }*/
+    
+    for(int i=0;i<waves.size();i++){
+        waves[i]->minWidth=ofParamMinWidth;
+        waves[i]->maxWidth=ofParamMaxWidth;
+        waves[i]->mapShaper=ofParamMapShaper;
+    }
+}
+
+void ofApp::onToggleEvent(ofxDatGuiToggleEvent e){
+    
+        // or we can check against the label of the event target //
+if(e.target->getLabel() == "Alphablending"){
+   // cout<<e.target->getChecked()<<endl;
+    bUseBlending=e.target->getChecked();
+    }
+if(e.target->getLabel() == "Screen Simulation"){
+    bUseShader=e.target->getChecked();
+    
+}
+    
+    if(e.target->getLabel() == "Blur"){
+        bUseBlur=e.target->getChecked();
+    }
+    
+    
+
+    
+    
+}
+
+

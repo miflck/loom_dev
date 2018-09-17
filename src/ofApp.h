@@ -4,6 +4,7 @@
 #include "Wave.hpp"
 //#include "ofxBlur.h"
 
+#include "ofxDatGui.h"
 
 
 class ofApp : public ofBaseApp{
@@ -104,12 +105,33 @@ class ofApp : public ofBaseApp{
     
     
     //ofxBlur blur;
+    ofxDatGui* gui;
+
+    ofxDatGuiSlider* minWidthSlider;
+    ofParameter<int> ofParamMinWidth;
+
+    ofxDatGuiSlider* maxWidthSlider;
+    ofParameter<int> ofParamMaxWidth;
+
+    ofxDatGuiSlider* mapShaperSlider;
+    ofParameter<float> ofParamMapShaper;
+    
+
+    ofParameter<float> ofParamPeriodDuration;
+    ofParameter<float> ofParamAmplitudeDuration;
+    
+    ofParameter<bool> ofParameterBlending;
+
     
     
     int minWidth=4;
     int maxWidth=45;
     int mapShaper=8;
 
+    void onParamIntChanged(int & pInt);
+    void onParamFloatChanged(float & pFloat);
+    void onSliderEvent(ofxDatGuiSliderEvent e);
+    void onToggleEvent(ofxDatGuiToggleEvent e);
 
     
 };

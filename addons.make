@@ -1,3 +1,4 @@
 ofxBlur
+ofxDatGui
 ofxEasing
 ofxPoly
