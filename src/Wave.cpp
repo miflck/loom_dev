@@ -302,6 +302,8 @@ void Wave::draw(){
 
         ofxPolyToMesh(smooth, rough, r);
         smooth.draw();
+        //ofSetLineWidth(5);
+       // rough.draw();
         
     }
     

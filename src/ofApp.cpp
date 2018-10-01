@@ -75,7 +75,7 @@ void ofApp::setup(){
     wavecolor.setHsb(0, 200, 200);
     waveHueAngle=0;
     
-    maxPlayers=15;
+    maxPlayers=50;//15;
     
     amplitudeDuration=0.5;
     periodDuration=0.5;
@@ -108,7 +108,8 @@ void ofApp::setup(){
     gui->onSliderEvent(this, &ofApp::onSliderEvent);
     gui->onToggleEvent(this, &ofApp::onToggleEvent);
 
-    
+    addWave();
+    addWave();
     
 }
 
@@ -147,7 +148,16 @@ void ofApp::update(){
         waves[i]->update();
     }
     
-  
+    for(int i=0;i<wavesToRemove.size();i++){
+        wavesToRemove[i]->setBackgroundcolor(backgroundcolor);
+        wavesToRemove[i]->update();
+
+    }
+    
+    
+    
+    ofRemove(wavesToRemove,shouldRemove);
+
     
     ofRemove(waves,shouldRemove);
     numPlayerBefore=numPlayer;
@@ -194,6 +204,11 @@ void ofApp::draw(){
         glBlendFunc(GL_SRC_ALPHA, GL_ONE);
     }
    glBlendEquation(GL_FUNC_ADD);
+    
+    for(int i=0;i<wavesToRemove.size();i++){
+        wavesToRemove[i]->draw();
+    }
+    
     for(int i=0;i<waves.size();i++){
         waves[i]->draw();
     }
@@ -366,6 +381,156 @@ fboShader.getTextureReference().getTextureData().bFlipTexture = true;
    
 }
 
+void ofApp::addWave(){
+    
+    numPlayer++;
+    if(numPlayer>maxPlayers)numPlayer=maxPlayers;
+    
+    if(waves.size()<numPlayer){
+        angle=(angle+45)%360;
+        hueAngle+=10;
+        
+        
+        waveHueAngle+=5;
+        wavecolor.setHueAngle(waveHueAngle%360);
+        
+        
+        // backgroundcolor.setHueAngle(hueAngle%360);
+        waves.push_back(shared_ptr<Wave>(new Wave));
+        waves.back().get()->setup(angle,backgroundcolor);
+        
+        
+        
+        waves.back().get()->setPeriodTarget(ofMap(numPlayer, 0, maxPlayers, maxPeriod, minPeriod));
+        waves.back().get()->setPeriodDuration(ofParamPeriodDuration);
+        waves.back().get()->setInitTime();
+        
+        waves.back().get()->setAmplitudeTarget(ofMap(numPlayer, 0, maxPlayers, minAmplitude, maxAmplitude));
+        waves.back().get()->setAmplitudeDuration(ofParamAmplitudeDuration);
+        
+        waves.back().get()->myColor=wavecolor;
+        
+        
+        waves.back().get()->minWidth=ofParamMinWidth;
+        waves.back().get()->maxWidth=ofParamMaxWidth;
+        waves.back().get()->mapShaper=ofParamMapShaper;
+        
+        
+        // waves.back()->setSpeed(ofMap(numPlayer, 0, 10, 0.01, 0.005));
+        // waves.back()->setSpeed(0.99);
+        
+    }
+    
+}
+
+
+void ofApp::addWaveClockwise(){
+    
+    numPlayer++;
+    if(numPlayer>maxPlayers)numPlayer=maxPlayers;
+    
+    if(waves.size()<numPlayer){
+        angle=(angle-45)%360;
+        hueAngle+=10;
+        
+        
+        waveHueAngle+=5;
+        wavecolor.setHueAngle(waveHueAngle%360);
+        
+        
+        // backgroundcolor.setHueAngle(hueAngle%360);
+        waves.push_back(shared_ptr<Wave>(new Wave));
+        waves.back().get()->setup(angle,backgroundcolor);
+        
+        
+        
+        waves.back().get()->setPeriodTarget(ofMap(numPlayer, 0, maxPlayers, maxPeriod, minPeriod));
+        waves.back().get()->setPeriodDuration(ofParamPeriodDuration);
+        waves.back().get()->setInitTime();
+        
+        waves.back().get()->setAmplitudeTarget(ofMap(numPlayer, 0, maxPlayers, minAmplitude, maxAmplitude));
+        waves.back().get()->setAmplitudeDuration(ofParamAmplitudeDuration);
+        
+        waves.back().get()->myColor=wavecolor;
+        
+        
+        waves.back().get()->minWidth=ofParamMinWidth;
+        waves.back().get()->maxWidth=ofParamMaxWidth;
+        waves.back().get()->mapShaper=ofParamMapShaper;
+        
+        
+        // waves.back()->setSpeed(ofMap(numPlayer, 0, 10, 0.01, 0.005));
+        // waves.back()->setSpeed(0.99);
+        
+    }
+    
+}
+
+
+
+void ofApp::addWaveAntiClockwise(){
+    
+    numPlayer++;
+    if(numPlayer>maxPlayers)numPlayer=maxPlayers;
+    
+    if(waves.size()<numPlayer){
+        angle=(angle+45)%360;
+        hueAngle+=10;
+        
+        
+        waveHueAngle+=5;
+        wavecolor.setHueAngle(waveHueAngle%360);
+        
+        
+        // backgroundcolor.setHueAngle(hueAngle%360);
+        waves.push_back(shared_ptr<Wave>(new Wave));
+        waves.back().get()->setup(angle,backgroundcolor);
+        
+        
+        
+        waves.back().get()->setPeriodTarget(ofMap(numPlayer, 0, maxPlayers, maxPeriod, minPeriod));
+        waves.back().get()->setPeriodDuration(ofParamPeriodDuration);
+        waves.back().get()->setInitTime();
+        
+        waves.back().get()->setAmplitudeTarget(ofMap(numPlayer, 0, maxPlayers, minAmplitude, maxAmplitude));
+        waves.back().get()->setAmplitudeDuration(ofParamAmplitudeDuration);
+        
+        waves.back().get()->myColor=wavecolor;
+        
+        
+        waves.back().get()->minWidth=ofParamMinWidth;
+        waves.back().get()->maxWidth=ofParamMaxWidth;
+        waves.back().get()->mapShaper=ofParamMapShaper;
+        
+        
+        // waves.back()->setSpeed(ofMap(numPlayer, 0, 10, 0.01, 0.005));
+        // waves.back()->setSpeed(0.99);
+        
+    }
+    
+}
+
+void ofApp::removeWave(){
+    numPlayer--;
+    if(numPlayer<2)numPlayer=2;
+    if( waves.size()>2 ){
+        for(int i=0;i<waves.size();i++){
+            cout<<i<<" "<<waves[i]->getState()<<endl;
+            
+            if(waves[i]->getState()!=FADEOUT){
+                waves[i]->setState(FADEOUT);
+                wavesToRemove.push_back(waves[i]);
+                waves.erase(waves.begin() + i);
+                break;
+                
+            }
+        }
+        
+    }
+    
+    
+}
+
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
     
@@ -387,7 +552,16 @@ void ofApp::keyPressed(int key){
     if(key=='g'){
         gui->setVisible(!gui->getVisible());
     }
-      /*
+ 
+    if(key=='q'){
+        addWaveClockwise();
+    }
+    if(key=='w'){
+        addWaveAntiClockwise();
+    }
+    
+    
+    /*
     if(key=='C'){
         for(int i=0;i<waves.size();i++){
             waves[i]->bUseBlending=!waves[i]->bUseBlending;
@@ -468,7 +642,7 @@ void ofApp::keyPressed(int key){
     
     if (key == OF_KEY_UP)
     {
-        numPlayer++;
+       /* numPlayer++;
         if(numPlayer>maxPlayers)numPlayer=maxPlayers;
         
         if(waves.size()<numPlayer){
@@ -505,31 +679,38 @@ void ofApp::keyPressed(int key){
            // waves.back()->setSpeed(0.99);
 
         }
-        
+        */
+        addWave();
         
 
     }
     if (key == OF_KEY_DOWN)
     {
-        numPlayer--;
-        if(numPlayer<0)numPlayer=0;
-        if(numPlayer>=0)
+       /* numPlayer--;
+        if(numPlayer<2)numPlayer=2;
+        if( waves.size()>2 ){
             for(int i=0;i<waves.size();i++){
                 cout<<i<<" "<<waves[i]->getState()<<endl;
 
                 if(waves[i]->getState()!=FADEOUT){
                     waves[i]->setState(FADEOUT);
+                    wavesToRemove.push_back(waves[i]);
+                    waves.erase(waves.begin() + i);
                     break;
 
                 }
             }
             
-        
-
+        }
+*/
+        removeWave();
     }
     
     
 }
+
+
+
 
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){

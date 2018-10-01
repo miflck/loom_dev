@@ -68,9 +68,16 @@ class ofApp : public ofBaseApp{
     int angle=0;
     
     vector      <shared_ptr<Wave> > waves;
+    vector      <shared_ptr<Wave> > wavesToRemove;
 
     
+    void addWave();
+    void addWaveClockwise();
+    void addWaveAntiClockwise();
 
+    
+    
+    void removeWave();
 
     ofColor backgroundcolor;
     int colorangle=0;
