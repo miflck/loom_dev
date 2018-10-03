@@ -59,6 +59,8 @@ class ofApp : public ofBaseApp{
     
     bool bUseShader=true;
     bool bUseBlur=true;
+    bool bUseSecondBlur=true;
+
     
     bool bUseAlpha=true;
     

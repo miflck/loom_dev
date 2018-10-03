@@ -38,31 +38,12 @@ void ofApp::setup(){
     colorangle=0;
   
    backgroundcolor=ofColor(0);
-   // backgroundcolor=ofColor(222,184,135);
 
     blendMode = 0;
 
     maske.load("maske.png");
     
- //   blur.setup(ofGetWidth(), ofGetHeight(), 10, .2, 4);
-
-    
-   // ofBackground(255);
-    
-    
-    
-   /* backgroundcolor.setHueAngle(hueAngle%360);
-    waves.push_back(shared_ptr<Wave>(new Wave));
-    waves.back().get()->setup(angle,backgroundcolor);
-    
-    
-    angle=(angle+90)%360;
-    hueAngle+=10;
-    backgroundcolor.setHueAngle(hueAngle%360);
-    waves.push_back(shared_ptr<Wave>(new Wave));
-    waves.back().get()->setup(angle,backgroundcolor);
-    */
-    
+  
     
     
     minAmplitude=screenheight/2;
@@ -101,6 +82,8 @@ void ofApp::setup(){
     
     gui->addToggle("Screen Simulation",true);
     gui->addToggle("Blur",true);
+    gui->addToggle("Second Blur",true);
+
     gui->addToggle("Alphablending",false);
     
 
@@ -117,13 +100,6 @@ void ofApp::setup(){
 void ofApp::update(){
   
   
-   // blur.setScale(ofMap(mouseX, 0, ofGetWidth(), 0, 10));
-    //blur.setRotation(ofMap(mouseY, 0, ofGetHeight(), -PI, PI));
-   /* if(numPlayer!=numPlayerBefore){
-    waveHueAngle+=10;
-    wavecolor.setHueAngle(waveHueAngle%360);
-    }*/
-    
     for(int i=0;i<waves.size();i++){
         waves[i]->setBackgroundcolor(backgroundcolor);
         if(numPlayer!=numPlayerBefore){
@@ -196,7 +172,6 @@ void ofApp::draw(){
     ofSetColor(255);
     
     fbo.begin();
-
     ofClear(0,0);
     if(bUseBlending){
         glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
@@ -260,7 +235,7 @@ void ofApp::draw(){
     if(bUseBlur){
         shaderBlurY.end();
     }
-        fboBlurTwoPass.end();
+    fboBlurTwoPass.end();
   
 
   
@@ -270,15 +245,12 @@ void ofApp::draw(){
     
     fboShader.begin();
     ofClear(0,0);
-fboShader.getTextureReference().getTextureData().bFlipTexture = true;
+    fboShader.getTextureReference().getTextureData().bFlipTexture = true;
     
    if(bUseShader){
         shader.begin();
         shader.setUniform2f("u_resolution", screenwidth,screenheight);
-       // shader.setUniformTexture("tex0", fbo.getTextureReference(), 1);
        shader.setUniformTexture("tex1", fboBlurTwoPass.getTextureReference(), 1);
-     //  shader.setUniformTexture("tex1", fbo.getTextureReference(), 1);
-
         shader.setUniform1f("time", ofGetElapsedTimef());
         float mousePosition = ofGetMouseX();
         shader.setUniform1f("mouseX", mousePosition);
@@ -308,8 +280,8 @@ fboShader.getTextureReference().getTextureData().bFlipTexture = true;
    // fboShader.draw(ofGetWidth()/2-fboShader.getWidth()/2,ofGetHeight()/2-fboShader.getHeight()/2);
     
 
-    /*
-    blur=8;
+    
+    blur=6;
     
     shaderBlurOnePass.begin();
     ofClear(0,0);
@@ -317,7 +289,7 @@ fboShader.getTextureReference().getTextureData().bFlipTexture = true;
     ofSetColor(backgroundcolor);
     ofDrawRectangle(0,0,screenwidth,screenheight);
     
-    if(bUseBlur){
+    if(bUseSecondBlur){
         shaderBlurX.begin();
         shaderBlurX.setUniform1f("blurAmnt", blur);
     }
@@ -329,7 +301,7 @@ fboShader.getTextureReference().getTextureData().bFlipTexture = true;
     fboShader.draw(0,0);
     //  ofEnableAlphaBlending();
     
-    if(bUseBlur){
+    if(bUseSecondBlur){
         shaderBlurX.end();
     }
     shaderBlurOnePass.end();
@@ -338,23 +310,29 @@ fboShader.getTextureReference().getTextureData().bFlipTexture = true;
     shaderBlurTwoPass.begin();
     ofClear(0,0);
     
-    if(bUseBlur){
+    if(bUseSecondBlur){
         shaderBlurY.begin();
         shaderBlurY.setUniform1f("blurAmnt", blur);
     }
+    ofSetColor(255);
+
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
     
     shaderBlurOnePass.draw(0, 0);
-    if(bUseBlur){
+    if(bUseSecondBlur){
         shaderBlurY.end();
     }
     shaderBlurTwoPass.end();
-    */
     
-    fboShader.draw(ofGetWidth()/2-fboShader.getWidth()/2,ofGetHeight()/2-fboShader.getHeight()/2);
+    
+    if(bUseSecondBlur){
+        shaderBlurTwoPass.draw(ofGetWidth()/2-fboShader.getWidth()/2,ofGetHeight()/2-fboShader.getHeight()/2);
+
+    }else{
+        fboShader.draw(ofGetWidth()/2-fboShader.getWidth()/2,ofGetHeight()/2-fboShader.getHeight()/2);
+    }
 
     
-   // shaderBlurTwoPass.draw(ofGetWidth()/2-fboShader.getWidth()/2,ofGetHeight()/2-fboShader.getHeight()/2);
     
    // ofSetColor(255);
   // glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
@@ -395,7 +373,7 @@ void ofApp::addWave(){
         wavecolor.setHueAngle(waveHueAngle%360);
         
         
-        ofParamMapShaper=ofMap(numPlayer, 2, 20, 1, 10,true);
+    //    ofParamMapShaper=ofMap(numPlayer, 2, 20, 1, 10,true);
         
         
         // backgroundcolor.setHueAngle(hueAngle%360);
@@ -422,9 +400,9 @@ void ofApp::addWave(){
         // waves.back()->setSpeed(ofMap(numPlayer, 0, 10, 0.01, 0.005));
         // waves.back()->setSpeed(0.99);
         
-        for(int i=0;i<waves.size();i++){
+     /*   for(int i=0;i<waves.size();i++){
             waves[i]->mapShaper=ofParamMapShaper;
-        }
+        }*/
         
         
     }
@@ -446,7 +424,7 @@ void ofApp::addWaveClockwise(){
         wavecolor.setHueAngle(waveHueAngle%360);
         
         
-        ofParamMapShaper=ofMap(numPlayer, 2, 20, 1, 10,true);
+       // ofParamMapShaper=ofMap(numPlayer, 2, 20, 1, 10,true);
 
         
         // backgroundcolor.setHueAngle(hueAngle%360);
@@ -473,9 +451,9 @@ void ofApp::addWaveClockwise(){
         // waves.back()->setSpeed(ofMap(numPlayer, 0, 10, 0.01, 0.005));
         // waves.back()->setSpeed(0.99);
         
-        for(int i=0;i<waves.size();i++){
+       /* for(int i=0;i<waves.size();i++){
             waves[i]->mapShaper=ofParamMapShaper;
-        }
+        }*/
         
     }
     
@@ -496,7 +474,7 @@ void ofApp::addWaveAntiClockwise(){
         waveHueAngle+=5;
         wavecolor.setHueAngle(waveHueAngle%360);
         
-        ofParamMapShaper=ofMap(numPlayer, 2, 20, 1, 10,true);
+       // ofParamMapShaper=ofMap(numPlayer, 2, 20, 1, 10,true);
 
         
         
@@ -524,9 +502,9 @@ void ofApp::addWaveAntiClockwise(){
         // waves.back()->setSpeed(ofMap(numPlayer, 0, 10, 0.01, 0.005));
         // waves.back()->setSpeed(0.99);
         
-        for(int i=0;i<waves.size();i++){
+     /*   for(int i=0;i<waves.size();i++){
             waves[i]->mapShaper=ofParamMapShaper;
-        }
+        }*/
         
     }
     
@@ -536,7 +514,7 @@ void ofApp::removeWave(){
     numPlayer--;
     if(numPlayer<2)numPlayer=2;
     
-    ofParamMapShaper=ofMap(numPlayer, 2, 20, 1, 10,true);
+   // ofParamMapShaper=ofMap(numPlayer, 2, 20, 1, 10,true);
 
     
     if( waves.size()>2 ){
@@ -553,9 +531,9 @@ void ofApp::removeWave(){
         }
         
         
-        for(int i=0;i<waves.size();i++){
+    /*    for(int i=0;i<waves.size();i++){
                  waves[i]->mapShaper=ofParamMapShaper;
-        }
+        }*/
         
         
     }
@@ -839,7 +817,9 @@ if(e.target->getLabel() == "Screen Simulation"){
     }
     
     
-
+    if(e.target->getLabel() == "Second Blur"){
+        bUseSecondBlur=e.target->getChecked();
+    }
     
     
 }
