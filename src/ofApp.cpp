@@ -395,6 +395,9 @@ void ofApp::addWave(){
         wavecolor.setHueAngle(waveHueAngle%360);
         
         
+        ofParamMapShaper=ofMap(numPlayer, 2, 20, 1, 10,true);
+        
+        
         // backgroundcolor.setHueAngle(hueAngle%360);
         waves.push_back(shared_ptr<Wave>(new Wave));
         waves.back().get()->setup(angle,backgroundcolor);
@@ -418,6 +421,11 @@ void ofApp::addWave(){
         
         // waves.back()->setSpeed(ofMap(numPlayer, 0, 10, 0.01, 0.005));
         // waves.back()->setSpeed(0.99);
+        
+        for(int i=0;i<waves.size();i++){
+            waves[i]->mapShaper=ofParamMapShaper;
+        }
+        
         
     }
     
@@ -438,6 +446,9 @@ void ofApp::addWaveClockwise(){
         wavecolor.setHueAngle(waveHueAngle%360);
         
         
+        ofParamMapShaper=ofMap(numPlayer, 2, 20, 1, 10,true);
+
+        
         // backgroundcolor.setHueAngle(hueAngle%360);
         waves.push_back(shared_ptr<Wave>(new Wave));
         waves.back().get()->setup(angle,backgroundcolor);
@@ -461,6 +472,10 @@ void ofApp::addWaveClockwise(){
         
         // waves.back()->setSpeed(ofMap(numPlayer, 0, 10, 0.01, 0.005));
         // waves.back()->setSpeed(0.99);
+        
+        for(int i=0;i<waves.size();i++){
+            waves[i]->mapShaper=ofParamMapShaper;
+        }
         
     }
     
@@ -481,6 +496,9 @@ void ofApp::addWaveAntiClockwise(){
         waveHueAngle+=5;
         wavecolor.setHueAngle(waveHueAngle%360);
         
+        ofParamMapShaper=ofMap(numPlayer, 2, 20, 1, 10,true);
+
+        
         
         // backgroundcolor.setHueAngle(hueAngle%360);
         waves.push_back(shared_ptr<Wave>(new Wave));
@@ -506,6 +524,10 @@ void ofApp::addWaveAntiClockwise(){
         // waves.back()->setSpeed(ofMap(numPlayer, 0, 10, 0.01, 0.005));
         // waves.back()->setSpeed(0.99);
         
+        for(int i=0;i<waves.size();i++){
+            waves[i]->mapShaper=ofParamMapShaper;
+        }
+        
     }
     
 }
@@ -513,6 +535,10 @@ void ofApp::addWaveAntiClockwise(){
 void ofApp::removeWave(){
     numPlayer--;
     if(numPlayer<2)numPlayer=2;
+    
+    ofParamMapShaper=ofMap(numPlayer, 2, 20, 1, 10,true);
+
+    
     if( waves.size()>2 ){
         for(int i=0;i<waves.size();i++){
             cout<<i<<" "<<waves[i]->getState()<<endl;
@@ -525,6 +551,12 @@ void ofApp::removeWave(){
                 
             }
         }
+        
+        
+        for(int i=0;i<waves.size();i++){
+                 waves[i]->mapShaper=ofParamMapShaper;
+        }
+        
         
     }
     
